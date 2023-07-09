@@ -122,5 +122,42 @@ namespace CollageApp.Controllers
             // 200 Ok  success 
             return Ok(users);
         }
+
+
+        // HTTP Post Methods 
+        [HttpPost("/api/CreateStudent")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<StudentDto> CreateStudent([FromBody] StudentDto student)
+        {
+
+            if (student == null)
+            {
+                return BadRequest();
+            }
+
+            int newId = CollegeRepository.Students.LastOrDefault().Id + 1;
+
+            Student std = new Student
+            {
+                Id = newId,
+                StudentName = student.StudentName,
+                Address = student.Address,
+                Email = student.Email
+
+            };
+
+            CollegeRepository.Students.Add(std);
+            // 200 Ok Success 
+            student.Id = std.Id;
+            // 201 create 
+            // return  create url Given by "GetStudentById"  base  of url  https://localhost:7260/api/Student/3
+            return CreatedAtRoute("GetStudentById", new { id= student.Id }, student);
+            //return Ok(student);
+
+
+
+        }
     }
 }
