@@ -19,6 +19,9 @@ namespace CollageApp.Controllers
 
         [HttpGet("GetAllStudents")]
         //[Route("GetAllStudent")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public ActionResult<IEnumerable<Student>> GetAllStudents()
         {
             var result = CollegeRepository.Students;
@@ -32,6 +35,9 @@ namespace CollageApp.Controllers
         }
 
         [HttpGet("{id:int}", Name = "GetStudentById")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public ActionResult<Student> GetStudentById(int id)
         {
             if(id <= 0)
@@ -49,6 +55,9 @@ namespace CollageApp.Controllers
         }
 
         [HttpDelete("{id:int}", Name = "StudnetDelete")]
+        [ProducesResponseType(200)]  // documented
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public ActionResult< bool> StudnetDelete(int id)
         {
             if(id <= 0 )
@@ -68,6 +77,12 @@ namespace CollageApp.Controllers
         }
 
         [HttpGet("GetUsers")]
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult GetUsers()
         {   
             return Ok( CollegeRepository.Users);
