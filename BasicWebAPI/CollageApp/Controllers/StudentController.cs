@@ -1,4 +1,5 @@
-﻿using CollageApp.Model;
+﻿using CollageApp.DTO;
+using CollageApp.Model;
 using CollageApp.Repository;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,8 +31,24 @@ namespace CollageApp.Controllers
                 // 204 No Content 
                 return NoContent();
             }
-            
-            return Ok( CollegeRepository.Students);
+
+            var studentDto = new List<StudentDto>();
+
+            foreach (var student in result)
+            {
+                StudentDto obj = new StudentDto()
+                {
+                    Id = student.Id,
+                    StudentName = student.StudentName,
+                    Email = student.Email,
+                    Address = student.Address
+
+                };
+
+                studentDto.Add(obj);
+            }
+
+            return Ok(studentDto);
         }
 
         [HttpGet("{id:int}", Name = "GetStudentById")]
@@ -40,12 +57,12 @@ namespace CollageApp.Controllers
         [ProducesResponseType(404)]
         public ActionResult<Student> GetStudentById(int id)
         {
-            if(id <= 0)
+            if (id <= 0)
             {
                 // 400 Bad Request client Error 
                 return BadRequest();
             }
-            if(CollegeRepository.Students.Where(x => x.Id == id).FirstOrDefault() == null)
+            if (CollegeRepository.Students.Where(x => x.Id == id).FirstOrDefault() == null)
             {
                 // Not found Error  404  means this data is not  find server side 
                 return NotFound();
@@ -58,9 +75,9 @@ namespace CollageApp.Controllers
         [ProducesResponseType(200)]  // documented
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public ActionResult< bool> StudnetDelete(int id)
+        public ActionResult<bool> StudnetDelete(int id)
         {
-            if(id <= 0 )
+            if (id <= 0)
             {
                 // 400 BadRequest from client 
                 return BadRequest();
@@ -83,9 +100,27 @@ namespace CollageApp.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult GetUsers()
-        {   
-            return Ok( CollegeRepository.Users);
+        public ActionResult<UserDTO> GetUsers()
+        {
+            var userInfo = CollegeRepository.Users;
+
+            if (userInfo == null)
+            {
+                // 404 not found code
+                return NotFound();
+            }
+
+            // using link query
+            var users = userInfo.Select(item => new UserDTO
+            {
+                UserId = item.UserId,
+                Company = item.Company,
+                UserName = item.UserName
+            });
+
+
+            // 200 Ok  success 
+            return Ok(users);
         }
     }
 }
