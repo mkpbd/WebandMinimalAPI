@@ -130,3 +130,18 @@ Create HttpPost  API  With  Status Code
 
     }
 ```
+
+Create ApI Update httpPut
+
+```csharp
+[HttpPut("{id:int}")]
+        public ActionResult UpdateVilla(int id, [FromBody] VillaDto villa)
+        {
+            if(villa == null || id == villa.Id) return BadRequest();
+
+            var vil = VillaStore.VillaList.Where(x => x.Id == id).FirstOrDefault();
+            vil.Name = villa.Name;
+            vil.Address = villa.Address;
+            return NoContent();
+        }
+```
