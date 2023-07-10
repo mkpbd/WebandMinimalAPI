@@ -17,7 +17,7 @@ namespace VillaAPI.Controllers
         }
 
         //[Route("{id:int}", Name = "GetVillbyId")]
-        [HttpGet("{id:int}" , Name = "GetVillbyId")]
+        [HttpGet("{id:int}", Name = "GetVillbyId")]
 
         [ProducesResponseType(200, Type = typeof(VillaDto))]
         [ProducesResponseType(400, Type = typeof(VillaDto))]
@@ -27,7 +27,7 @@ namespace VillaAPI.Controllers
         {
             if (id == 0) return BadRequest();
             var singleVilla = VillaStore.VillaList.Where(x => x.Id == id).FirstOrDefault();
-            if(singleVilla == null)
+            if (singleVilla == null)
             {
                 return NotFound();
             }
@@ -35,5 +35,26 @@ namespace VillaAPI.Controllers
             return Ok(singleVilla);
 
         }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+
+        public ActionResult<VillaDto> CreatedVilla([FromBody] VillaDto villa)
+        {
+
+            if (villa == null) return BadRequest();
+            if (villa.Id > 0) return StatusCode(StatusCodes.Status500InternalServerError);
+
+            var lastId = VillaStore.VillaList.LastOrDefault();
+            villa.Id = lastId.Id > 0 ? lastId.Id + 1 : 1;
+
+            VillaStore.VillaList.Add(villa);
+            return Ok(villa);
+        }
+
+
     }
 }
