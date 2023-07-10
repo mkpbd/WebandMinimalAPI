@@ -6,7 +6,7 @@ namespace CollageApp.Repository
 {
     public static class TeacherRepository
     {
-        public static  List<Teacher> Teachers { get; set; } = new List<Teacher> { new Teacher
+        public static  IList<Teacher> Teachers { get; set; } = new List<Teacher> { new Teacher
         {
              Id = 1,
               Degnation = "assist",
