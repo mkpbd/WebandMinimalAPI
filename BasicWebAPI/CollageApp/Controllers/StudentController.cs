@@ -159,5 +159,34 @@ namespace CollageApp.Controllers
 
 
         }
+
+        // Updata data in memory database 
+
+        [HttpPut("UpdateStudent")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult<StudentDto> UpdateStudent([FromBody] StudentDto model)
+        {
+
+            if (model == null || model?.Id <= 0) {
+                return BadRequest();
+            }
+
+            var existingStudent = CollegeRepository.Students.Where(x => x.Id == model.Id).FirstOrDefault();
+
+            if (existingStudent == null)
+            {
+                return NotFound();
+            }
+
+            existingStudent.Address = model.Address;
+            existingStudent.StudentName = model.StudentName;
+            existingStudent.Email = model.Email;
+
+            return Ok(existingStudent);
+        }
+
+
     }
 }
