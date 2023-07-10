@@ -68,5 +68,20 @@ namespace VillaAPI.Controllers
             return NoContent();
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [HttpDelete("{id:int}")]
+        public ActionResult DeleteVilla(int id)
+        {
+            if (id <= 0) return BadRequest();
+
+            var vil = VillaStore.VillaList.Where(x => x.Id == id).FirstOrDefault();
+
+            VillaStore.VillaList.Remove(vil);
+
+            return NoContent();
+
+        }
     }
 }
