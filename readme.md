@@ -307,7 +307,7 @@ namespace VillaAPI.Controllers
         [HttpPut("{id:int}")]
         public ActionResult UpdateVilla(int id, [FromBody] VillaDto villa)
         {
-            if(villa == null || id == villa.Id) return BadRequest();
+            if(villa == null || id != villa.Id) return BadRequest();
 
             //var vil = VillaStore.VillaList.Where(x => x.Id == id).FirstOrDefault();
             //vil.Name = villa.Name;

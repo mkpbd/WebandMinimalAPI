@@ -82,7 +82,7 @@ namespace VillaAPI.Controllers
         [HttpPut("{id:int}")]
         public ActionResult UpdateVilla(int id, [FromBody] VillaDto villa)
         {
-            if(villa == null || id == villa.Id) return BadRequest();
+            if(villa == null || id != villa.Id) return BadRequest();
 
             //var vil = VillaStore.VillaList.Where(x => x.Id == id).FirstOrDefault();
             //vil.Name = villa.Name;
@@ -92,6 +92,7 @@ namespace VillaAPI.Controllers
             vil.Name = villa.Name;
             vil.Address = villa.Address;
             vil.UpdatedDate = DateTime.Now;
+
             _context.Villas.Update(vil);
             _context.SaveChanges();
             return NoContent();
