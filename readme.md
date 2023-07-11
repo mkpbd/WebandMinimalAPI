@@ -1,0 +1,15 @@
+Medician App With Web API 
+
+![1689060689884](image/readme/1689060689884.png)
+
+Database Mode 
+
+![1689060707636](image/readme/1689060707636.png)
+
+![1689060729645](image/readme/1689060729645.png)
+
+![1689060747057](image/readme/1689060747057.png)
+
+![1689060771605](image/readme/1689060771605.png)
+
+![1689060783395](image/readme/1689060783395.png)
