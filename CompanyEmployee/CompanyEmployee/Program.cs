@@ -1,4 +1,5 @@
 
+using CompanyEmployee.Extensions;
 using Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,7 @@ namespace CompanyEmployee
             builder.Services.AddDbContext<ApplicationDBContext>( opttions => opttions.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSqlConnection"))
             
             );
+            builder.Services.ConfigureRepositoryManager();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

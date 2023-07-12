@@ -13,6 +13,13 @@ namespace Repository
     {
         public CompanyRepository(ApplicationDBContext context) : base(context) { }
 
+        public void AnyMethodFromCompanyRepository()
+        {
+
+        }
+
+        public IEnumerable<Company> GetAllCompanies(bool trackChanges) => FindAll(trackChanges).OrderBy(c => c.Name).ToList();
+
 
 
     }

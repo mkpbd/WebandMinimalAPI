@@ -8,7 +8,7 @@ namespace Repository
     public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
     {
         protected ApplicationDBContext _context;
-        public RepositoryBase(ApplicationDBContext repositoryContext)
+        protected RepositoryBase(ApplicationDBContext repositoryContext)
         {
             _context = repositoryContext;
         }
