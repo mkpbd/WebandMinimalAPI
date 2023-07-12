@@ -1,8 +1,12 @@
-﻿namespace WebAPIGroupStudy34.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace WebAPIGroupStudy34.Models
 {
     public class Employee
     {
         public int Id { get; set; }
+
+        [Required]
         public string? Name { get; set; }
         public string? Desgination { get; set; }
         public int Salary { get; set; }
