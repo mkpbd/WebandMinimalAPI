@@ -11,5 +11,6 @@ namespace Contracts
     {
         void AnyMethodFromCompanyRepository();
         IEnumerable<Company> GetAllCompanies(bool trackChanges);
+        Company GetCompany(Guid companyId, bool trackChanges);
     }
 }

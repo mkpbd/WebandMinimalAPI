@@ -17,6 +17,9 @@ namespace CompanyEmployee
                 //    .ForCtorParam("FullAddress",
                 //    opt => opt.MapFrom(x => string.Join(' ', x.Address, x.Country))
                 //    ).ReverseMap();
+
+                //
+                   
             }
             catch (Exception ex)
             {
