@@ -11,7 +11,7 @@ namespace CompanyEmployee
             try
             {
                 CreateMap<Employee, EmployeeDto>();
-                CreateMap< EmployeeForCreationDto, Employee>();
+                CreateMap<EmployeeForCreationDto, Employee>();
                 //CreateMap<Company, CompanyDto>();
                 CreateMap<Company, CompanyDto>().ForMember(des => des.FullAddress, opt => opt.MapFrom(src => $"{src.Address}   {src.Country}"));
                 //CreateMap<Company, CompanyDto>()
@@ -23,6 +23,10 @@ namespace CompanyEmployee
                 CreateMap<CompanyForCreationDto, Company>();
 
                 CreateMap<EmployeeForUpdateDto, Employee>();
+
+                CreateMap<CompanyForUpdateDto, Company>();
+
+                CreateMap<EmployeeForUpdateDto, Employee>().ReverseMap();
 
             }
             catch (Exception ex)
