@@ -17,6 +17,7 @@ namespace CompanyEmployee
             
             );
             builder.Services.ConfigureRepositoryManager();
+            builder.Services.AddAutoMapper(typeof(Program));
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
