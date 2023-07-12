@@ -75,7 +75,11 @@ namespace CompanyEmployee.Controllers
                 _logger.LogError($"Company with id: {companyId} doesn't exist in the database.");
                 return NotFound();
             }
-            var employeeEntity = _mapper.Map<Employee>(employee); _repository.Employee.CreateEmployeeForCompany(companyId, employeeEntity); _repository.Save();
+            var employeeEntity = _mapper.Map<Employee>(employee);
+
+            _repository.Employee.CreateEmployeeForCompany(companyId, employeeEntity);
+
+            _repository.Save();
 
             var employeeToReturn = _mapper.Map<EmployeeDto>(employeeEntity);
 
