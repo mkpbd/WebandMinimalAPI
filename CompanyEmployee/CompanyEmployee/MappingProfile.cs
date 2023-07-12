@@ -22,6 +22,8 @@ namespace CompanyEmployee
                 //
                 CreateMap<CompanyForCreationDto, Company>();
 
+                CreateMap<EmployeeForUpdateDto, Employee>();
+
             }
             catch (Exception ex)
             {
