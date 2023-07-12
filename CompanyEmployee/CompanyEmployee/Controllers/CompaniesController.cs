@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Contracts;
 using Entities.DataTransferObjects;
+using Entities.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,11 +15,11 @@ namespace CompanyEmployee.Controllers
         private readonly IRepositoryManager _repository;
         private readonly ILogger<CompaniesController> _logger;
         private readonly IMapper _mapper;
-        public CompaniesController(IRepositoryManager repository,// ILogger<CompaniesController> logger, 
+        public CompaniesController(IRepositoryManager repository, ILogger<CompaniesController> logger,
             IMapper mapper)
         {
             _repository = repository;
-          //  _logger = logger;
+            _logger = logger;
             _mapper = mapper;
 
         }
@@ -46,7 +47,7 @@ namespace CompanyEmployee.Controllers
             }
             catch (Exception ex)
             {
-            //    _logger.LogError($"Something went wrong in the {nameof(GetCompanies)} action {ex}");
+                _logger.LogError($"Something went wrong in the {nameof(GetCompanies)} action {ex}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -67,7 +68,22 @@ namespace CompanyEmployee.Controllers
             }
         }
 
+        [HttpPost]
+        public IActionResult CreateCompany([FromBody] CompanyForCreationDto company)
+        {
+            if (company == null)
+            {
+                _logger.LogError("CompanyForCreationDto object sent from client is null.");
 
+                return BadRequest("CompanyForCreationDto object is null");
+            }
+            var companyEntity = _mapper.Map<Company>(company);
 
+            _repository.Company.CreateCompany(companyEntity);
+
+            _repository.Save(); var companyToReturn = _mapper.Map<CompanyDto>(companyEntity);
+
+            return CreatedAtRoute("GetCompany", new { id = companyToReturn.Id }, companyToReturn);
+        }
     }
 }
