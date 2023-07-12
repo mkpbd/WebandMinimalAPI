@@ -36,10 +36,10 @@ namespace CompanyEmployee.Controllers
                 //    FullAddress = string.Join(' ', c.Address, c.Country)
                 //}).ToList();
 
-                //var companiesDto = _mapper.Map<IEnumerable<CompanyDto>>(companies);
-                var mapList = companies.Select(_mapper.Map<CompanyDto>);
+                var companiesDto = _mapper.Map<IEnumerable<CompanyDto>>(companies);
+                //var mapList = companies.Select(_mapper.Map<CompanyDto>);
 
-                return Ok(mapList);
+                return Ok(companiesDto);
 
                 //return Ok(companies);
             }
