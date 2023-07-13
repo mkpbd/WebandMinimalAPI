@@ -35,5 +35,6 @@ namespace Repository
             }
         }
         public void Save() => _dbContext.SaveChanges();
+        public Task SaveAsync() => _dbContext.SaveChangesAsync();
     }
 }

@@ -26,11 +26,12 @@ namespace CompanyEmployee.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetCompanies()
+        public async Task<IActionResult> GetCompanies()
         {
             try
             {
-                var companies = _repository.Company.GetAllCompanies(trackChanges: false);
+                //var companies = _repository.Company.GetAllCompanies(trackChanges: false);
+                var companies = await _repository.Company.GetAllCompaniesAsync(trackChanges: false);
 
                 //var companiesDto = companies.Select(c => new CompanyDto
                 //{
@@ -54,9 +55,10 @@ namespace CompanyEmployee.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetCompany(Guid id)
+        public async Task<IActionResult> GetCompany(Guid id)
         {
-            var company = _repository.Company.GetCompany(id, trackChanges: false);
+            //var company = _repository.Company.GetCompany(id, trackChanges: false);
+            var company = await _repository.Company.GetCompanyAsync(id, trackChanges: false);
 
             if (company == null)
             {
@@ -65,7 +67,8 @@ namespace CompanyEmployee.Controllers
             }
             else
             {
-                var companyDto = _mapper.Map<CompanyDto>(company); return Ok(companyDto);
+                var companyDto = _mapper.Map<CompanyDto>(company);
+                return Ok(companyDto);
             }
         }
 
@@ -89,7 +92,7 @@ namespace CompanyEmployee.Controllers
 
         [HttpGet("collection/({ids})", Name = "CompanyCollection")]
 
-        public IActionResult GetCompanyCollection(IEnumerable<Guid> ids)
+        public async Task<IActionResult> GetCompanyCollection(IEnumerable<Guid> ids)
         //public IActionResult GetCompanyCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
         {
             if (ids == null)
@@ -99,7 +102,8 @@ namespace CompanyEmployee.Controllers
                 return BadRequest("Parameter ids is null");
             }
 
-            var companyEntities = _repository.Company.GetByIds(ids, trackChanges: false);
+            //var companyEntities = _repository.Company.GetByIds(ids, trackChanges: false);
+            var companyEntities = await _repository.Company.GetByIdsAsync(ids, trackChanges: false);
 
             if (ids.Count() != companyEntities.Count())
             {
@@ -115,7 +119,7 @@ namespace CompanyEmployee.Controllers
         }
 
         [HttpPost("collection")]
-        public IActionResult CreateCompanyCollection([FromBody] IEnumerable<CompanyForCreationDto> companyCollection)
+        public async Task< IActionResult> CreateCompanyCollection([FromBody] IEnumerable<CompanyForCreationDto> companyCollection)
         {
             if (companyCollection == null)
             {
@@ -130,7 +134,8 @@ namespace CompanyEmployee.Controllers
             {
                 _repository.Company.CreateCompany(company);
             }
-            _repository.Save();
+            //_repository.Save();
+           await _repository.SaveAsync();
 
             var companyCollectionToReturn = _mapper.Map<IEnumerable<CompanyDto>>(companyEntities);
 
@@ -141,9 +146,10 @@ namespace CompanyEmployee.Controllers
 
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteCompany(Guid id)
+        public async Task< IActionResult> DeleteCompany(Guid id)
         {
-            var company = _repository.Company.GetCompany(id, trackChanges: false);
+            //var company = _repository.Company.GetCompany(id, trackChanges: false);
+            var company = await _repository.Company.GetCompanyAsync(id, trackChanges: false);
 
             if (company == null)
             {
@@ -154,21 +160,23 @@ namespace CompanyEmployee.Controllers
 
             _repository.Company.DeleteCompany(company);
 
-            _repository.Save();
+            //_repository.Save();
+           await _repository.SaveAsync();
 
             return NoContent();
         }
 
 
         [HttpPut("{id}")]
-        public IActionResult UpdateCompany(Guid id, [FromBody] CompanyForUpdateDto company)
+        public async Task<IActionResult> UpdateCompany(Guid id, [FromBody] CompanyForUpdateDto company)
         {
             if (company == null)
             {
                 _logger.LogError("CompanyForUpdateDto object sent from client is null.");
                 return BadRequest("CompanyForUpdateDto object is null");
             }
-            var companyEntity = _repository.Company.GetCompany(id, trackChanges: true);
+            //var companyEntity = _repository.Company.GetCompany(id, trackChanges: true);
+            var companyEntity = await _repository.Company.GetCompanyAsync(id, trackChanges: true);
 
             if (companyEntity == null)
             {
@@ -178,7 +186,8 @@ namespace CompanyEmployee.Controllers
             }
             _mapper.Map(company, companyEntity);
 
-            _repository.Save();
+            //_repository.Save();
+           await _repository.SaveAsync();
 
             return NoContent();
         }

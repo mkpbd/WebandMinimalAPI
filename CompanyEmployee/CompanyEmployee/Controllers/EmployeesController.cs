@@ -22,9 +22,10 @@ namespace CompanyEmployee.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        public IActionResult GetEmployeesForCompany(Guid companyId)
+        public async Task<IActionResult> GetEmployeesForCompany(Guid companyId)
         {
-            var company = _repository.Company.GetCompany(companyId, trackChanges: false);
+            //var company = _repository.Company.GetCompany(companyId, trackChanges: false);
+            var company = _repository.Company.GetCompanyAsync(companyId, trackChanges: false);
             if (company == null)
             {
                 _logger.LogError($"Company with id: {companyId} doesn't exist in the database.");
@@ -189,8 +190,6 @@ namespace CompanyEmployee.Controllers
             return NoContent();
 
         }
-
-
 
     }
 }
