@@ -21,6 +21,7 @@ namespace CompanyEmployee.Controllers
             _logger = logger;
             _mapper = mapper;
         }
+
         [HttpGet]
         public async Task<IActionResult> GetEmployeesForCompany(Guid companyId)
         {
@@ -38,6 +39,30 @@ namespace CompanyEmployee.Controllers
             return Ok(employeesDto);
             //return Ok(employeesFromDb);
         }
+
+
+        // get pagination  from api  
+
+        [Route("paginating")]
+        [HttpGet]
+        public async Task<IActionResult> GetEmployeesForCompanyAysnc(Guid companyId, [FromQuery] EmployeeParameters employeeParameters)
+        {
+            var company = await _repository.Company.GetCompanyAsync(companyId, trackChanges: false);
+
+            if (company == null)
+            {
+                _logger.LogError($"Company with id: {companyId} doesn't exist in the database.");
+
+                return NotFound();
+            }
+
+            var employeesFromDb = await _repository.Employee.GetEmployeesAsync(companyId, employeeParameters, trackChanges: false);
+
+            var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employeesFromDb);
+
+            return Ok(employeesDto);
+        }
+
 
         [HttpGet("{id}")]
         public IActionResult GetEmployeeForCompany(Guid companyId, Guid id)
@@ -59,8 +84,10 @@ namespace CompanyEmployee.Controllers
                 return NotFound();
             }
             var employee = _mapper.Map<EmployeeDto>(employeeDb);
+
             return Ok(employee);
         }
+
 
         [HttpPost]
         public IActionResult CreateEmployeeForCompany(Guid companyId, [FromBody] EmployeeForCreationDto employee)
@@ -68,19 +95,23 @@ namespace CompanyEmployee.Controllers
             if (employee == null)
             {
                 _logger.LogError("EmployeeForCreationDto object sent from client is null.");
+
                 return BadRequest("EmployeeForCreationDto object is null");
             }
+
             var company = _repository.Company.GetCompany(companyId, trackChanges: false);
 
             if (company == null)
             {
                 _logger.LogError($"Company with id: {companyId} doesn't exist in the database.");
+
                 return NotFound();
             }
 
             if (!ModelState.IsValid)
             {
                 _logger.LogError("Invalid model state for the EmployeeForCreationDto object");
+
                 return UnprocessableEntity(ModelState);
             }
 
@@ -94,13 +125,16 @@ namespace CompanyEmployee.Controllers
             var employeeToReturn = _mapper.Map<EmployeeDto>(employeeEntity);
 
             return CreatedAtRoute("GetEmployeeForCompany", new { companyId, id = employeeToReturn.Id }, employeeToReturn);
+
         }
+
 
         [HttpDelete("{id}")]
         public IActionResult DeleteEmployeeForCompany(Guid companyId, Guid id)
         {
 
             var company = _repository.Company.GetCompany(companyId, trackChanges: false);
+
             if (company == null)
             {
                 _logger.LogError($"Company with id: {companyId} doesn't exist in the database.");
@@ -116,6 +150,7 @@ namespace CompanyEmployee.Controllers
 
                 return NotFound();
             }
+
             _repository.Employee.DeleteEmployee(employeeForCompany);
 
             _repository.Save();
@@ -163,13 +198,17 @@ namespace CompanyEmployee.Controllers
         {
             if (patchDoc == null)
             {
-                _logger.LogError("patchDoc object sent from client is null."); return BadRequest("patchDoc object is null");
+                _logger.LogError("patchDoc object sent from client is null."); 
+                
+                return BadRequest("patchDoc object is null");
             }
             var company = _repository.Company.GetCompany(companyId, trackChanges: false);
 
             if (company == null)
             {
-                _logger.LogError($"Company with id: {companyId} doesn't exist in the database."); return NotFound();
+                _logger.LogError($"Company with id: {companyId} doesn't exist in the database.");
+                
+                return NotFound();
             }
 
             var employeeEntity = _repository.Employee.GetEmployee(companyId, id, trackChanges: true);
@@ -177,6 +216,7 @@ namespace CompanyEmployee.Controllers
             if (employeeEntity == null)
             {
                 _logger.LogError($"Employee with id: {id} doesn't exist in the database.");
+
                 return NotFound();
             }
             var employeeToPatch = _mapper.Map<EmployeeForUpdateDto>(employeeEntity);
