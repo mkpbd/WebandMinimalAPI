@@ -76,6 +76,14 @@ namespace CompanyEmployee.Controllers
                 _logger.LogError($"Company with id: {companyId} doesn't exist in the database.");
                 return NotFound();
             }
+
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the EmployeeForCreationDto object");
+                return UnprocessableEntity(ModelState);
+            }
+
+
             var employeeEntity = _mapper.Map<Employee>(employee);
 
             _repository.Employee.CreateEmployeeForCompany(companyId, employeeEntity);
