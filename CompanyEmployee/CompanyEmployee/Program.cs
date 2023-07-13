@@ -1,4 +1,6 @@
 
+using ActionFilters.Filters;
+using CompanyEmployee.ActionFilters;
 using CompanyEmployee.Extensions;
 using Entities;
 using Microsoft.EntityFrameworkCore;
@@ -26,10 +28,20 @@ namespace CompanyEmployee
                 builder.Services.AddControllers(config =>
                     {
                         config.RespectBrowserAcceptHeader = true;
+                        //config.RespectBrowserAcceptHeader = false;
+                        //config.Filters.Add(new GlobalFilterExample());
                     }
                 )
                   .AddNewtonsoftJson()
                   .AddXmlDataContractSerializerFormatters();
+
+                // Filtering option cheacking 
+                //builder.Services.AddScoped<ActionFilterExample>();
+                //builder.Services.AddScoped<AsyncActionFilterExample>();
+               builder.Services.AddScoped<ValidationFilterAttribute>();
+
+
+
                 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
                 builder.Services.AddEndpointsApiExplorer();
                 builder.Services.AddSwaggerGen();
@@ -47,7 +59,6 @@ namespace CompanyEmployee
                 app.UseHttpsRedirection();
 
                 app.UseAuthorization();
-
 
                 app.MapControllers();
 

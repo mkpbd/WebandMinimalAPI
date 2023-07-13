@@ -5,10 +5,10 @@ namespace CompanyEmployee.ActionFilters
 {
     public class ValidationFilterAttribute : IActionFilter
     {
-        readonly Logger<ValidationFilterAttribute> _logger;
-        public ValidationFilterAttribute(Logger<ValidationFilterAttribute> logger)
+       private readonly ILogger<ValidationFilterAttribute> _logger;
+        public ValidationFilterAttribute(ILogger<ValidationFilterAttribute> logger)
         {
-            this._logger = logger;
+            _logger = logger;
         }
         public void OnActionExecuted(ActionExecutedContext context)
         {
@@ -20,7 +20,7 @@ namespace CompanyEmployee.ActionFilters
             var action = context.RouteData.Values["action"];
             var controller = context.RouteData.Values["controller"];
 
-            var param = context?.ActionArguments?.SingleOrDefault(x => x.Value.ToString().Contains("Dto")).Value;
+            var param = context.ActionArguments.SingleOrDefault(x => x.Value.ToString().Contains("Dto")).Value;
             if (param == null)
             {
                 _logger.LogError($"Object sent from client is null. Controller: {controller}, action: {action}");

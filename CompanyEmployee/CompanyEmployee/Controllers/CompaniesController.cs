@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CompanyEmployee.ActionFilters;
 using CompanyEmployee.ModelBinders;
 using Contracts;
 using Entities.DataTransferObjects;
@@ -73,6 +74,7 @@ namespace CompanyEmployee.Controllers
         }
 
         [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]  // action filtering using heare
         public IActionResult CreateCompany([FromBody] CompanyForCreationDto company)
         {
             if (company == null)
@@ -85,7 +87,8 @@ namespace CompanyEmployee.Controllers
 
             _repository.Company.CreateCompany(companyEntity);
 
-            _repository.Save(); var companyToReturn = _mapper.Map<CompanyDto>(companyEntity);
+            _repository.Save(); 
+            var companyToReturn = _mapper.Map<CompanyDto>(companyEntity);
 
             return CreatedAtRoute("GetCompany", new { id = companyToReturn.Id }, companyToReturn);
         }
@@ -119,7 +122,7 @@ namespace CompanyEmployee.Controllers
         }
 
         [HttpPost("collection")]
-        public async Task< IActionResult> CreateCompanyCollection([FromBody] IEnumerable<CompanyForCreationDto> companyCollection)
+        public async Task<IActionResult> CreateCompanyCollection([FromBody] IEnumerable<CompanyForCreationDto> companyCollection)
         {
             if (companyCollection == null)
             {
@@ -135,7 +138,7 @@ namespace CompanyEmployee.Controllers
                 _repository.Company.CreateCompany(company);
             }
             //_repository.Save();
-           await _repository.SaveAsync();
+            await _repository.SaveAsync();
 
             var companyCollectionToReturn = _mapper.Map<IEnumerable<CompanyDto>>(companyEntities);
 
@@ -146,7 +149,7 @@ namespace CompanyEmployee.Controllers
 
 
         [HttpDelete("{id}")]
-        public async Task< IActionResult> DeleteCompany(Guid id)
+        public async Task<IActionResult> DeleteCompany(Guid id)
         {
             //var company = _repository.Company.GetCompany(id, trackChanges: false);
             var company = await _repository.Company.GetCompanyAsync(id, trackChanges: false);
@@ -161,7 +164,7 @@ namespace CompanyEmployee.Controllers
             _repository.Company.DeleteCompany(company);
 
             //_repository.Save();
-           await _repository.SaveAsync();
+            await _repository.SaveAsync();
 
             return NoContent();
         }
@@ -187,7 +190,7 @@ namespace CompanyEmployee.Controllers
             _mapper.Map(company, companyEntity);
 
             //_repository.Save();
-           await _repository.SaveAsync();
+            await _repository.SaveAsync();
 
             return NoContent();
         }
