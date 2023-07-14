@@ -36,8 +36,11 @@ out var latitude) && double.TryParse(values[1], NumberStyles.AllowDecimalPoint, 
         public static ValueTask<Location?> BindAsync(HttpContext context, ParameterInfo parameter)
         {
             if (double.TryParse(context.Request.Query["lat"],
-            NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var latitude) && double.TryParse(context.Request.Query["lon"],
-            NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var longitude))
+            NumberStyles.AllowDecimalPoint,
+            CultureInfo.InvariantCulture, 
+            out var latitude) && double.TryParse(context.Request.Query["lon"],
+            NumberStyles.AllowDecimalPoint,
+            CultureInfo.InvariantCulture, out var longitude))
             {
                 var location = new Location{ Latitude = latitude, Longitude = longitude };
                 return ValueTask.FromResult<Location?>(location);
