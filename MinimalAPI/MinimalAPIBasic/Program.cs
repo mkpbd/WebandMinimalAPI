@@ -1,4 +1,6 @@
 
+using MinimalAPIBasic.Data;
+
 namespace MinimalAPIBasic
 {
     public class Program
@@ -22,6 +24,12 @@ namespace MinimalAPIBasic
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+
+            app.MapGet("/api/coupon", () =>
+            {
+                return Results.Ok(CouponStore.Coupons);
+            });
 
             app.UseHttpsRedirection();
 
