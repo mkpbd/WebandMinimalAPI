@@ -64,6 +64,45 @@ namespace MinimalAPIBasic
 
             }).WithName("CreateCoupon").Produces(201).Produces(400);
 
+            //PutReques fore update 
+
+            app.MapPut("/api/coupon/{id:int}", (int id, [FromBody] Coupon coupon) =>
+            {
+                if (coupon.Id <= 0 || string.IsNullOrEmpty(coupon.Name))
+                {
+                    return Results.BadRequest();
+                }
+
+                var couponList = CouponStore.Coupons;
+                var findCoupon = couponList.Where(item => item.Id == id).FirstOrDefault();
+                if (findCoupon == null)
+                {
+                    return Results.NotFound();
+                }
+
+                findCoupon.Name = coupon.Name;
+                findCoupon.Updated = coupon.Updated;
+                findCoupon.Percent = coupon.Percent;
+
+                return Results.Ok(coupon);
+
+            });
+
+            // Delete Rotue 
+
+            app.MapDelete("api/coupon/{id:int}", (int id) =>
+            {
+                if (id <= 0) return Results.BadRequest();
+
+                var couponStore = CouponStore.Coupons;
+
+                var find = couponStore.Where(item => item.Id == id).FirstOrDefault();
+                if (find == null) return Results.NoContent();
+
+                couponStore.Remove(find);
+                return Results.Ok("data has been deleted");
+
+            });
 
             app.UseHttpsRedirection();
 
