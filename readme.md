@@ -132,3 +132,22 @@ Parameters that are passed to the handler are resolved in the following ways:
 
 As we can see, ASP.NET Core is able to automatically understand where to search for parameters
 for binding, based on the route pattern and the types of the parameters themselves
+
+In this way, the API still expects a query string parameter named q, but in the handler its value is now
+bound to the searchText argument.
+
+According to the standard, the ***GET, DELETE, HEAD***, and **OPTIONS** HTTP options should never have a body. If, nevertheless, you want to use it, you need to explicitly add the **[FromBody]** attribute to the handler argument; otherwise, you’ll get an ***InvalidOperationException***  error.
+
+**Special bindings**
+
+it to get the context of the request and response: ***HttpContext, Request, Response***, and ***User***. In minimal APIs, we don't have a base class, but we can still access this information because it is treated as a special binding that is always available to any handler:
+
+```csharp
+app.MapGet("/products", (HttpContext context, HttpRequest req, HttpResponse res, ClaimsPrincipal user) => { });
+```
+
+We can also access all these objects using the IHttpContextAccessor interface, as we did in the previous ASP.NET Core versions
+
+***Custom binding***
+
+If we want to bind a parameter that comes from a route, query string, or header to a custom type, we can add a static TryParse method to the type:

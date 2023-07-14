@@ -3,6 +3,7 @@ using Chapter02.Handler;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.Intrinsics.X86;
+using System.Security.Claims;
 using System.Xml.Linq;
 
 namespace Chapter02
@@ -75,6 +76,18 @@ namespace Chapter02
             // Parameter Binding 
             app.MapGet("/search", (string q) => { });
             app.MapGet("/search2", ([FromQuery(Name = "q")] string searchText) => { });
+            // Spacial parameter Binding
+            app.MapGet("/products", (HttpContext context, HttpRequest req, HttpResponse res, ClaimsPrincipal user) => {
+
+                var con = context;
+                var r = req;
+                var rs = res;
+
+            });
+
+
+            // GET /navigate?location=43.8427,7.8527
+            app.MapGet("/navigate", (Location location) => $"Location: { location.Latitude}, { location.Longitude}   ");
 
             app.Run();
         }
