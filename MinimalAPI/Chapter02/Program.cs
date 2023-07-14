@@ -2,6 +2,7 @@
 using Chapter02.Handler;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Runtime.Intrinsics.X86;
 using System.Security.Claims;
 using System.Xml.Linq;
@@ -16,6 +17,7 @@ namespace Chapter02
 
             // Add services to the container.
             builder.Services.AddAuthorization();
+            builder.Services.AddScoped<PeopleHandler>();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -88,6 +90,24 @@ namespace Chapter02
 
             // GET /navigate?location=43.8427,7.8527
             app.MapGet("/navigate", (Location location) => $"Location: { location.Latitude}, { location.Longitude}   ");
+
+            // Exploring responses
+            // we can directly return  a string or a class (either synchronously or asynchronously) :
+
+                        app.MapGet("/ok", () => Results.Ok(new Person("Donald", "Duck")));
+            app.MapGet("/notfound", () => Results.NotFound());
+            app.MapPost("/badrequest", () =>
+            {
+                // Creates a 400 response with a JSON body.
+                return Results.BadRequest(new { ErrorMessage = "Unable to complete the request" });
+            });
+
+            app.MapGet("/download", (string fileName) => Results.File(fileName));
+
+
+
+            // MapEndpoints
+            PeopleHandler.MapEndpoints(app);
 
             app.Run();
         }

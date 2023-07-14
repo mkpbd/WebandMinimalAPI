@@ -151,3 +151,80 @@ We can also access all these objects using the IHttpContextAccessor interface, a
 ***Custom binding***
 
 If we want to bind a parameter that comes from a route, query string, or header to a custom type, we can add a static TryParse method to the type:
+
+```csharp
+using System.Globalization;
+using System.Reflection;
+namespace Chapter02.Handler
+{
+    public class Location
+    {
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
+
+        public static bool TryParse(string? value, IFormatProvider? provider, out Location? location)
+        {
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                var values = value.Split(',', StringSplitOptions.RemoveEmptyEntries);
+
+                if (values.Length == 2 && double.TryParse(values[0],
+                NumberStyles.AllowDecimalPoint,
+                CultureInfo.InvariantCulture,
+
+out var latitude) && double.TryParse(values[1], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var longitude))
+                {
+                    location = new Location
+                    {
+                        Latitude = latitude,
+                        Longitude = longitude
+                    };
+                    return true;
+                }
+            }
+            location = null;
+            return false;
+        }
+
+        public static ValueTask<Location?> BindAsync(HttpContext context, ParameterInfo parameter)
+        {
+            if (double.TryParse(context.Request.Query["lat"],
+            NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var latitude) && double.TryParse(context.Request.Query["lon"],
+            NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var longitude))
+            {
+                var location = new Location{ Latitude = latitude, Longitude = longitude };
+                return ValueTask.FromResult<Location?>(location);
+            }
+            return ValueTask.FromResult<Location?>(null);
+        }
+
+    }
+
+}
+
+```
+
+**Exploring responses**
+
+we can directly return a string or a class (either synchronously or asynchronously)
+
+If we return a string , the framework writes the string directly to the ***response***, setting its content type to **text/plain** and the status code to ***200 OK***
+
+If we use a class, the object is serialized into the JSON format and sent to the response with the ***application/json***content type and a 200 OK status code
+
+However, in a real application, we typically need to control the response type and the status code. In this case, we can use the static ***Results***class, which allows us to return an instance of the ***IResult***  interface, which in minimal APIs acts how ***IActionResult***does for controllers. For instance, we can use it to *return a 201 Created response* rather than a *400 Bad Request* or a *404 Not*  Found message. L et's look at some examples:
+
+```csharp
+app.MapGet("/ok", () => Results.Ok(new Person("Donald", "Duck")));
+app.MapGet("/notfound", () => Results.NotFound());
+app.MapPost("/badrequest", () =>
+{
+// Creates a 400 response with a JSON body.
+    return Results.BadRequest(new { ErrorMessage = "Unable to complete the request" });
+});
+
+app.MapGet("/download", (string fileName) => Results.File(fileName));
+
+```
+
+We only have a few methods that allow us to explicitly set the content type, when getting a file with **Results.Bytes(),** **Results.Stream(), and Results.File(),** or when using **Results.Text()** and **Results.Content().** In all other cases, when we're dealing with complex objects, the response will be in JSON format. This is a precise design choice since most developers rarely need to support other media types. By supporting only JSON without performing content negotiation, minimal APIs can be very efficient
