@@ -4,6 +4,6 @@
     {
         public string Hello() => "[INSTANCE METHOD] Hello World!";
 
-        public static string HelloStatic() => "[STATIC METHOD] Hello World!";
+        public static string HelloStatic() => "[Static METHOD] Hello World!";
     }
 }

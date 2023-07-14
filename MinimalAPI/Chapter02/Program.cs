@@ -1,7 +1,9 @@
 
 using Chapter02.Handler;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc;
 using System.Runtime.Intrinsics.X86;
+using System.Xml.Linq;
 
 namespace Chapter02
 {
@@ -61,6 +63,18 @@ namespace Chapter02
             // Here, we can see an example of a static method:
 
             app.MapGet("/hello-static-method", HelloHandler.HelloStatic);
+
+            // Route parameters
+
+            app.MapGet("/users/{username}/products/{productId}",
+                (string username, int productId) => $"The Username is {username} and the product Id is { productId }");
+
+            // route Constrains 
+            app.MapGet("/users/{id:int}", (int id) => $"The user Id is {id}");
+            app.MapGet("/users2/{id:guid}", (Guid id) => $"The user Guid is {id}");
+            // Parameter Binding 
+            app.MapGet("/search", (string q) => { });
+            app.MapGet("/search2", ([FromQuery(Name = "q")] string searchText) => { });
 
             app.Run();
         }
