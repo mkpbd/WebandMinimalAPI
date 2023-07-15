@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+
 using WebAPIGroupStudy34.Models;
 
 namespace WebAPIGroupStudy34.Controllers
@@ -42,9 +43,10 @@ namespace WebAPIGroupStudy34.Controllers
 
         }
 
-        [HttpGet("{id:int}", Name ="GetSingleEmployee")]
-        public  Employee GetSingleEmployee(int id) {
-                var emp  = EmployeeList.Where(x => x.Id == id).FirstOrDefault();
+        [HttpGet("{id:int}", Name = "GetSingleEmployee")]
+        public Employee GetSingleEmployee(int id)
+        {
+            var emp = EmployeeList.Where(x => x.Id == id).FirstOrDefault();
 
             return emp;
         }
@@ -54,7 +56,7 @@ namespace WebAPIGroupStudy34.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 
         [HttpPost]
-        public  ActionResult<Employee>  CreateEmployee([FromForm] Employee employee)
+        public ActionResult<Employee> CreateEmployee([FromBody] Employee employee)
         {
 
             //if (!ModelState.IsValid) return BadRequest();
@@ -74,14 +76,14 @@ namespace WebAPIGroupStudy34.Controllers
                 Salary = employee.Salary
 
             };
-           EmployeeList.Add(em);
+            EmployeeList.Add(em);
 
             return Ok(em);
 
         }
 
         [HttpPut("{id:int}")]
-        public ActionResult<Employee> UpdateEmployee(int id ,[FromBody] Employee emp)
+        public ActionResult<Employee> UpdateEmployee(int id, [FromBody] Employee emp)
         {
             if (emp == null) return BadRequest();
             if (id <= 0) return BadRequest();
@@ -98,7 +100,7 @@ namespace WebAPIGroupStudy34.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        public ActionResult<string> DeleteEmployee( int id)
+        public ActionResult<string> DeleteEmployee(int id)
         {
             if (id <= 0) return BadRequest();
 
@@ -109,5 +111,18 @@ namespace WebAPIGroupStudy34.Controllers
             return Ok(singleData.Name);
 
         }
+
+        // without FromBody  complex data from Post Man
+        [HttpPost("CreateEmployeePostMethod")]
+        //[Consumes("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult<Employee> Create(Employee employee)
+        {
+            return Ok(employee);
+        }
+
+
     }
 }
