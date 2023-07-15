@@ -120,6 +120,7 @@ namespace WebAPIGroupStudy34.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult<Employee> Create(Employee employee)
         {
+            //var httpContext = HttpContext.Request.Body;
             return Ok(employee);
         }
 
