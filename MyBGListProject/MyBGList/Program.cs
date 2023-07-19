@@ -10,6 +10,14 @@ namespace MyBGList
             // Add services to the container.
 
             builder.Services.AddControllers();
+            builder.Services.AddCors(options =>
+                options.AddDefaultPolicy(cfg =>
+                {
+                    cfg.AllowAnyOrigin();
+                    cfg.AllowAnyHeader();
+                    cfg.AllowAnyMethod();
+                }));
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

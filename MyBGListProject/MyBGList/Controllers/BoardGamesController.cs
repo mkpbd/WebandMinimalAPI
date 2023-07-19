@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MyBGList.DTO;
 using MyBGList.Models;
+using System;
+using System.Xml.Linq;
 
 namespace MyBGList.Controllers
 {
@@ -15,8 +18,8 @@ namespace MyBGList.Controllers
         }
 
         [HttpGet(Name = "GetBoardGames")]
-
-        public IEnumerable<BoardGame> Get()
+        [ResponseCache(Location = ResponseCacheLocation.Any, Duration = 60)]
+        public IEnumerable<BoardGame> GetGame()
         {
             return new[]
             {
@@ -38,6 +41,39 @@ namespace MyBGList.Controllers
             };
         }
 
+        [HttpGet("BorderGameGeneric")]
+        public RestDTO<BoardGame[]> GetBoorderGameGeneric()
+        {
+            return new RestDTO<BoardGame[]>()
+            {
+                Data = new BoardGame[] {
+                new BoardGame()
+                        {
+                        Id = 1,
+                        Name = "Axis & Allies",
+                        Year = 1981
+                },
+                new BoardGame()
+                        {
+                        Id = 2,
+                        Name = "Citadels",
+                        Year = 2000
+                },
+                new BoardGame()
+                        {
+                            Id = 3,
+                            Name = "Terraforming Mars",
+                            Year = 2016
+                }
+                    },
+                Links = new List<LinkDTO> {
+                new LinkDTO(
+                Url.Action(null, "BoardGames", null, Request.Scheme)!,
+                "self",
+                "GET"),
+                }
+            };
+        }
 
     }
 }

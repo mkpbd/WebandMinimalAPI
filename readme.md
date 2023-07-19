@@ -91,3 +91,41 @@ public class ErrorController : ControllerBase
 
 The Problem() method that we’re returning is a method of the ControllerBase class (which our
 ErrorController extends) that produces a ProblemDetail response—a machine-readable standardized format for specifying errors in HTTP API responses based on RFC 7807
+
+### **Cross origin Resource Sharing**
+
+CORS is handled by checking the *Access-Control-Allow-Origin* header and ensuring that it complies with the origin of the script that issued the call. This approach is a simple request.
+
+*Access-Control-Request-Method* —The HTTP method of the request
+
+*Access-Control-Request-Headers* —A list of custom headers that will be sent with the request
+
+***Origin*** —The origin of the script initiating the call
+
+***Access-Control-Allow-Origin*** —The origin allowed to make the request (or the * wildcard if any origin is allowed). This is the same header used by simple requests
+
+***Access-Control-Max-Age***  —How long the results of this preflight request can be cached (in seconds).
+
+**CORS Implements**
+
+```csharp
+builder.Services.AddCors(options =>
+options.AddDefaultPolicy(cfg => {
+cfg.AllowAnyOrigin();
+cfg.AllowAnyHeader();
+cfg.AllowAnyMethod();
+}));
+```
+
+Cashing Controles
+
+Microsoft.AspNetCore.Mvc
+
+The *[ResponseCache]* attribute is part of the Microsoft.AspNetCore.Mvc namespace. For that reason, we need to
+add a reference in the Program.cs file (for Minimal APIs) and/or in the controller files where we want to use it.
+
+```csharp
+[HttpGet(Name = "GetBoardGames")]
+[ResponseCache(Location = ResponseCacheLocation.Any, Duration = 60)]
+public IEnumerable<BoardGame> Get()
+```
