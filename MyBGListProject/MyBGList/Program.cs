@@ -1,4 +1,7 @@
 
+using Microsoft.EntityFrameworkCore;
+using MyBGList.Data;
+
 namespace MyBGList
 {
     public class Program
@@ -17,6 +20,10 @@ namespace MyBGList
                     cfg.AllowAnyHeader();
                     cfg.AllowAnyMethod();
                 }));
+
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                 options.UseSqlServer( builder.Configuration.GetConnectionString("DefaultConnection"))
+            );
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

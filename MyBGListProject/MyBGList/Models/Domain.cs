@@ -17,6 +17,8 @@ namespace MyBGList.Models
         [Required]
         public DateTime LastModifiedDate { get; set; }
 
-        public ICollection<BoardGamesDomains>? BoardGames_Domains { get; set; }
+        public ICollection<BoardGamesDomains>? BoardGamesDomains { get; set; }
+
+
     }
 }

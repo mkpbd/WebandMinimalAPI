@@ -13,7 +13,6 @@ namespace MyBGList.Models
         [Required]
         public DateTime CreatedDate { get; set; }
 
-
         // composition 
         public BoardGame? BoardGame { get; set; }
         public Mechanic? Mechanic { get; set; }

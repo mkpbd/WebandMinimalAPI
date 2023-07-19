@@ -43,7 +43,7 @@ namespace MyBGList.Models
         public DateTime LastModifiedDate { get; set; }
 
         // composition or relationShip
-        public ICollection<BoardGamesDomains>? BoardGames_Domains { get; set; }
-        public ICollection<BoardGamesMechanics>? BoardGames_Mechanics { get; set; }
+        public ICollection<BoardGamesDomains>? BoardGamesDomains { get; set; }
+        public ICollection<BoardGamesMechanics>? BoardGamesMechanics { get; set; }
     }
 }
